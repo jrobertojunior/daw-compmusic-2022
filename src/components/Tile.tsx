@@ -8,6 +8,7 @@ import * as Tone from "tone";
 
 type Props = {
   note: string;
+  color?: string;
 };
 
 const Tile = forwardRef((props: Props, ref) => {
@@ -42,6 +43,8 @@ const Tile = forwardRef((props: Props, ref) => {
     <div
       style={{
         transition: "all 0.2s ease-in-out",
+        backgroundColor: isActive ? props.color || "#000" : "#fff",
+        opacity: isActive ? 0.7 : 1,
       }}
       className={`tile ${isActive && "active"} ${isPlaying && "playing"}`}
       onClick={handleClick}
