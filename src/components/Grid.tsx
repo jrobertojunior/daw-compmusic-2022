@@ -16,7 +16,6 @@ const Grid = (props: Props) => {
 
   return (
     <div className="grid">
-      <button onClick={handleTeste}>Teste</button>
       {Array.from(Array(height).keys()).map((i) => (
         <>
           {Array.from(Array(width).keys()).map((j) => {
