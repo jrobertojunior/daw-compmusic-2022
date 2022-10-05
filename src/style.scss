@@ -1,0 +1,54 @@
+.main {
+  background-color: rgb(62, 66, 87);
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: Arial, Helvetica, sans-serif;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 10px;
+
+  .grid {
+    flex: 9;
+    width: 100%;
+    display: grid;
+    padding: 10px;
+    grid-template-columns: auto auto auto;
+    background-color: #2196f3;
+    padding: 10px;
+    // grid with 16 columns and 8 rows
+    grid-template-columns: repeat(16, 1fr);
+    grid-template-rows: repeat(8, 1fr);
+
+    .tile {
+      font-size: 5rem;
+      // color: rgb(62, 66, 87);
+      background-color: rgb(245, 245, 245);
+      border-radius: 2px;
+      border-color: rgb(197, 197, 197);
+      // add border
+      border: 0.1px solid rgb(195, 195, 195);
+
+      // add transition time
+      transition: all 0.2s ease-in-out;
+
+      &:hover {
+        transform: scale(1.05);
+        border-radius: 5px;
+      }
+    }
+    .active {
+      background-color: rgb(215, 215, 215);
+      color: white;
+    }
+  }
+
+  .trailer {
+    flex: 1;
+    background-color: aliceblue;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+  }
+}
