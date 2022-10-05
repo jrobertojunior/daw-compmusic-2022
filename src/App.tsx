@@ -32,16 +32,6 @@ function App() {
     <div className="main">
       <Grid />
       <Trailer />
-      {/* <h1>DAW</h1>
-      <div>
-        {Array.from(Array(grid.height).keys()).map((i) => (
-          <div className="row">
-            {Array.from(Array(grid.width).keys()).map((j) => (
-              <Tile />
-            ))}
-          </div>
-        ))}
-      </div> */}
     </div>
   );
 }

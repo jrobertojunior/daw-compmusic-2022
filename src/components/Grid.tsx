@@ -5,6 +5,8 @@ type Props = {};
 const width = 16;
 const height = 8;
 
+const notes = ["C5", "A4", "G4", "E4", "D4", "C4"];
+
 const Grid = (props: Props) => {
   const childRef = useRef<any>(null);
 
@@ -19,9 +21,9 @@ const Grid = (props: Props) => {
         <>
           {Array.from(Array(width).keys()).map((j) => {
             if (i === 0 && j === 0) {
-              return <Tile ref={childRef} />;
+              return <Tile note={notes[i] || "C4"} ref={childRef} />;
             }
-            return <Tile />;
+            return <Tile note={notes[i] || "C4"} />;
           })}
         </>
       ))}

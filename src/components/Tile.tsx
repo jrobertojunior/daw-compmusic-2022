@@ -6,7 +6,9 @@ import React, {
 } from "react";
 import * as Tone from "tone";
 
-type Props = {};
+type Props = {
+  note: string;
+};
 
 const Tile = forwardRef((props: Props, ref) => {
   const [isActive, setIsActive] = useState(false);
@@ -14,15 +16,21 @@ const Tile = forwardRef((props: Props, ref) => {
 
   useImperativeHandle(ref, () => ({
     playCallback() {
-      synth.triggerAttackRelease("C4", "8n");
+      if (isActive) {
+        play();
+      }
     },
   }));
 
   useEffect(() => {
     if (isActive) {
-      synth.triggerAttackRelease("C4", "8n");
+      play();
     }
   }, [isActive]);
+
+  function play() {
+    synth.triggerAttackRelease(props.note, "8n");
+  }
 
   function handleClick() {
     setIsActive((isActive) => {
@@ -31,7 +39,13 @@ const Tile = forwardRef((props: Props, ref) => {
   }
 
   return (
-    <div className={`tile ${isActive && "active"}`} onClick={handleClick}></div>
+    <div
+      style={{
+        transition: "all 0.2s ease-in-out",
+      }}
+      className={`tile ${isActive && "active"}`}
+      onClick={handleClick}
+    ></div>
   );
 });
 
