@@ -23,12 +23,6 @@ const Tile = forwardRef((props: Props, ref) => {
     },
   }));
 
-  useEffect(() => {
-    if (isActive) {
-      play();
-    }
-  }, [isActive]);
-
   function play() {
     setIsPlaying(true);
     synth.triggerAttackRelease(props.note, "8n");
@@ -39,6 +33,7 @@ const Tile = forwardRef((props: Props, ref) => {
 
   function handleClick() {
     setIsActive((isActive) => {
+      if (!isActive) play();
       return !isActive;
     });
   }

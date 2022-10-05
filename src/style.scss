@@ -31,7 +31,7 @@
       border: 0.1px solid rgb(195, 195, 195);
 
       // add transition time
-      transition: all 0.2s ease-in-out;
+      transition: all 0.1s ease-in-out;
 
       &:hover {
         transform: scale(1.05);
@@ -44,7 +44,7 @@
     }
     .playing {
       opacity: 0;
-      transition: opacity 1s ease-in-out;
+      transition: opacity 0.1s ease-in-out;
     }
   }
 
