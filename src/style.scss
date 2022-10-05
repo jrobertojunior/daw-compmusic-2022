@@ -42,6 +42,10 @@
       background-color: rgb(215, 215, 215);
       color: white;
     }
+    .playing {
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+    }
   }
 
   .trailer {

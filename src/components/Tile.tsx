@@ -12,6 +12,7 @@ type Props = {
 
 const Tile = forwardRef((props: Props, ref) => {
   const [isActive, setIsActive] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
   const synth = new Tone.Synth().toDestination();
 
   useImperativeHandle(ref, () => ({
@@ -29,7 +30,11 @@ const Tile = forwardRef((props: Props, ref) => {
   }, [isActive]);
 
   function play() {
+    setIsPlaying(true);
     synth.triggerAttackRelease(props.note, "8n");
+    setTimeout(() => {
+      setIsPlaying(false);
+    }, 100);
   }
 
   function handleClick() {
@@ -43,7 +48,7 @@ const Tile = forwardRef((props: Props, ref) => {
       style={{
         transition: "all 0.2s ease-in-out",
       }}
-      className={`tile ${isActive && "active"}`}
+      className={`tile ${isActive && "active"} ${isPlaying && "playing"}`}
       onClick={handleClick}
     ></div>
   );
