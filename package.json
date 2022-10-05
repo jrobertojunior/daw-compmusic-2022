@@ -2,12 +2,11 @@
   "name": "daw-compmusic-2022",
   "private": true,
   "version": "0.0.0",
-  "homepage": "https://jrobertojunior.github.io/daw-compmusic-2022/",
-  "type": "module",
   "homepage": "https://jrobertojunior.github.io/daw-compmusic-2022",
+  "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "tsc && vite build --base /daw-compmusic-2022",
     "deploy": "gh-pages -d dist",
     "preview": "vite preview"
   },
