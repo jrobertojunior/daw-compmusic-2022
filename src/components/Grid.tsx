@@ -27,7 +27,7 @@ const colors = [
 const Grid = (props: Props) => {
   const [activeGrid, setActiveGrid] = useState<boolean[][]>(
     Array.from({ length: height }, (_, i) =>
-      Array.from({ length: width }, (_, j) => (i + j) % 2 === 0)
+      Array.from({ length: width }, (_, j) => false)
     )
   );
   const [playNowCounter, setPlayNowCounter] = useState<number[][]>(
@@ -51,6 +51,52 @@ const Grid = (props: Props) => {
     setActiveGrid(_active);
   }
 
+  function playAll() {
+    activeGrid.forEach((row, i) => {
+      row.forEach((active, j) => {
+        active && playTile(i, j);
+      });
+    });
+  }
+
+  function playColumn(j: number) {
+    activeGrid.forEach((row, i) => {
+      row[j] && playTile(i, j);
+    });
+  }
+
+  const [playbackInterval, setPlaybackInterval] = useState<number>();
+  const [isPlaying, setIsPlaying] = useState<boolean>(false);
+
+  let playingCol = 0;
+  function start() {
+    setIsPlaying(true);
+    setPlaybackInterval(
+      setInterval(() => {
+        playColumn(playingCol);
+        // setPlayingCol((playingCol + 1) % width);
+        playingCol = (playingCol + 1) % width;
+      }, 500)
+    );
+  }
+
+  function stop() {
+    setIsPlaying(false);
+    clearInterval(playbackInterval);
+    playingCol = 0;
+  }
+
+  function clear() {
+    setActiveGrid(
+      Array.from({ length: height }, (_, i) =>
+        Array.from({ length: width }, (_, j) => false)
+      )
+    );
+    clearInterval(playbackInterval);
+    setIsPlaying(false);
+    playingCol = 0;
+  }
+
   return (
     <div className="grid">
       {Array.from({ length: height }, (_, i) => (
@@ -69,6 +115,12 @@ const Grid = (props: Props) => {
           })}
         </>
       ))}
+      {isPlaying ? (
+        <button onClick={stop}>Stop</button>
+      ) : (
+        <button onClick={start}>Start</button>
+      )}
+      <button onClick={clear}>Clear</button>
     </div>
   );
 };
