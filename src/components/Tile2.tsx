@@ -12,30 +12,28 @@ type Props = {
   color?: string;
   active?: boolean;
   onChange: (active: boolean) => void;
+  onClick?: () => void;
+  playNow?: number;
 };
 
 const Tile = forwardRef((props: Props, ref) => {
-  // const [props.active, setprops.active] = useState(props.active || false);
   const [isPlaying, setIsPlaying] = useState(false);
-  // const synth = new Tone.Synth().toDestination();
-  const [loaded, setLoaded] = useState(false);
   const synth = useRef<null | Tone.Synth<Tone.SynthOptions>>(null);
 
   useEffect(() => {
     synth.current = new Tone.Synth({}).toDestination();
-  });
+  }, []);
 
-  useImperativeHandle(ref, () => ({
-    playCallback() {
-      if (props.active) {
-        play();
-      }
-    },
-  }));
+  useEffect(() => {
+    if (!synth.current || !props.playNow) return;
+
+    play();
+  }, [props.playNow]);
 
   function play() {
     setIsPlaying(true);
     if (synth.current) {
+      console.log("playing");
       synth.current.triggerAttackRelease(props.note, "8n");
       setTimeout(() => {
         setIsPlaying(false);
@@ -44,11 +42,8 @@ const Tile = forwardRef((props: Props, ref) => {
   }
 
   function handleClick() {
-    props.onChange(!props.active);
-    if (!props.active) play();
-    // setprops.active((props.active) => {
-    //   return !props.active;
-    // });
+    // props.onChange(!props.active);
+    // if (!props.active) play();
   }
 
   return (
@@ -59,7 +54,7 @@ const Tile = forwardRef((props: Props, ref) => {
         opacity: props.active ? 0.7 : 1,
       }}
       className={`tile ${props.active && "active"} ${isPlaying && "playing"}`}
-      onClick={handleClick}
+      onClick={props.onClick}
     ></div>
   );
 });
