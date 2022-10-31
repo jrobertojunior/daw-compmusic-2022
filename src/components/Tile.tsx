@@ -2,6 +2,7 @@ import React, {
   forwardRef,
   useEffect,
   useImperativeHandle,
+  useRef,
   useState,
 } from "react";
 import * as Tone from "tone";
@@ -14,7 +15,13 @@ type Props = {
 const Tile = forwardRef((props: Props, ref) => {
   const [isActive, setIsActive] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
-  const synth = new Tone.Synth().toDestination();
+  // const synth = new Tone.Synth().toDestination();
+  const [loaded, setLoaded] = useState(false);
+  const synth = useRef<null | Tone.Synth<Tone.SynthOptions>>(null);
+
+  useEffect(() => {
+    synth.current = new Tone.Synth({}).toDestination();
+  });
 
   useImperativeHandle(ref, () => ({
     playCallback() {
@@ -26,10 +33,12 @@ const Tile = forwardRef((props: Props, ref) => {
 
   function play() {
     setIsPlaying(true);
-    synth.triggerAttackRelease(props.note, "8n");
-    setTimeout(() => {
-      setIsPlaying(false);
-    }, 100);
+    if (synth.current) {
+      synth.current.triggerAttackRelease(props.note, "8n");
+      setTimeout(() => {
+        setIsPlaying(false);
+      }, 100);
+    }
   }
 
   function handleClick() {
