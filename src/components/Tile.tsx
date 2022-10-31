@@ -1,10 +1,4 @@
-import React, {
-  forwardRef,
-  useEffect,
-  useImperativeHandle,
-  useRef,
-  useState,
-} from "react";
+import React, { forwardRef, useEffect, useRef, useState } from "react";
 import * as Tone from "tone";
 
 type Props = {
@@ -13,6 +7,7 @@ type Props = {
   active?: boolean;
   onClick?: () => void;
   playNow?: number;
+  darken?: boolean;
 };
 
 const Tile = forwardRef((props: Props, ref) => {
@@ -42,6 +37,7 @@ const Tile = forwardRef((props: Props, ref) => {
   return (
     <div
       style={{
+        filter: props.darken ? "brightness(0.5)" : "brightness(1)",
         transition: "all 0.2s ease-in-out",
         backgroundColor: props.active ? props.color || "#000" : "#fff",
         opacity: props.active ? 0.7 : 1,

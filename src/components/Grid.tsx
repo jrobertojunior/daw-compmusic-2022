@@ -36,6 +36,10 @@ const Grid = (props: Props) => {
     )
   );
 
+  const [darkenColumn, setDarkenColumn] = useState<boolean[]>(
+    Array.from({ length: width }, (_, i) => false)
+  );
+
   function playTile(i: number, j: number) {
     setPlayNowCounter((playNowCounter) => {
       const _playNowCounter = [...playNowCounter];
@@ -67,6 +71,7 @@ const Grid = (props: Props) => {
 
   const [playbackInterval, setPlaybackInterval] = useState<number>();
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  const [playingCol2, setPlayingCol2] = useState(0);
 
   let playingCol = 0;
   function start() {
@@ -74,7 +79,9 @@ const Grid = (props: Props) => {
     setPlaybackInterval(
       setInterval(() => {
         playColumn(playingCol);
-        // setPlayingCol((playingCol + 1) % width);
+        setDarkenColumn(
+          Array.from({ length: width }, (_, i) => i === playingCol)
+        );
         playingCol = (playingCol + 1) % width;
       }, 500)
     );
@@ -83,6 +90,7 @@ const Grid = (props: Props) => {
   function stop() {
     setIsPlaying(false);
     clearInterval(playbackInterval);
+    setDarkenColumn(Array.from({ length: width }, (_, i) => false));
     playingCol = 0;
   }
 
@@ -92,9 +100,7 @@ const Grid = (props: Props) => {
         Array.from({ length: width }, (_, j) => false)
       )
     );
-    clearInterval(playbackInterval);
-    setIsPlaying(false);
-    playingCol = 0;
+    stop();
   }
 
   return (
@@ -110,6 +116,7 @@ const Grid = (props: Props) => {
                 playNow={playNowCounter[i][j]}
                 color={colors[i]}
                 note={notes[i] || "C4"}
+                darken={darkenColumn[j]}
               />
             );
           })}
