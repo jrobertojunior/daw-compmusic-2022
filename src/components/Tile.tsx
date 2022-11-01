@@ -1,5 +1,8 @@
 import React, { forwardRef, useEffect, useRef, useState } from "react";
 import * as Tone from "tone";
+import kick from "../assets/kick.mp3";
+import snare from "../assets/snare.mp3";
+import hihat from "../assets/hihat.mp3";
 
 type Props = {
   note: string;
@@ -8,30 +11,53 @@ type Props = {
   onClick?: () => void;
   playNow?: number;
   darken?: boolean;
+  drum?: "kick" | "snare" | "hihat";
 };
 
-const Tile = forwardRef((props: Props, ref) => {
+const drums = {
+  kick,
+  snare,
+  hihat,
+};
+
+const Tile = (props: Props) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const synth = useRef<null | Tone.Synth<Tone.SynthOptions>>(null);
+  const player = useRef<null | Tone.Player>(null);
 
   useEffect(() => {
+    if (props.drum) {
+      player.current = new Tone.Player({
+        url: drums[props.drum],
+      }).toDestination();
+      return;
+    }
+
     synth.current = new Tone.Synth({}).toDestination();
   }, []);
 
   useEffect(() => {
-    if (!synth.current || !props.playNow) return;
+    if (!props.playNow) return;
+
+    if (props.drum && !player.current) return;
+
+    if (!props.drum && !synth.current) return;
 
     play();
   }, [props.playNow]);
 
   function play() {
     setIsPlaying(true);
-    if (synth.current) {
-      synth.current.triggerAttackRelease(props.note, "8n");
-      setTimeout(() => {
-        setIsPlaying(false);
-      }, 100);
+
+    if (props.drum) {
+      player.current!.start();
+    } else {
+      synth.current!.triggerAttackRelease(props.note, "8n");
     }
+
+    setTimeout(() => {
+      setIsPlaying(false);
+    }, 100);
   }
 
   return (
@@ -46,6 +72,6 @@ const Tile = forwardRef((props: Props, ref) => {
       onClick={props.onClick}
     ></div>
   );
-});
+};
 
 export default Tile;

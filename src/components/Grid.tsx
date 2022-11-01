@@ -55,14 +55,6 @@ const Grid = (props: Props) => {
     setActiveGrid(_active);
   }
 
-  function playAll() {
-    activeGrid.forEach((row, i) => {
-      row.forEach((active, j) => {
-        active && playTile(i, j);
-      });
-    });
-  }
-
   function playColumn(j: number) {
     activeGrid.forEach((row, i) => {
       row[j] && playTile(i, j);
@@ -71,7 +63,6 @@ const Grid = (props: Props) => {
 
   const [playbackInterval, setPlaybackInterval] = useState<number>();
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
-  const [playingCol2, setPlayingCol2] = useState(0);
 
   let playingCol = 0;
   function start() {
@@ -117,6 +108,12 @@ const Grid = (props: Props) => {
                 color={colors[i]}
                 note={notes[i] || "C4"}
                 darken={darkenColumn[j]}
+                drum={
+                  (i === height - 1 && "kick") ||
+                  (i === height - 2 && "snare") ||
+                  (i === height - 3 && "hihat") ||
+                  undefined
+                }
               />
             );
           })}
@@ -133,7 +130,3 @@ const Grid = (props: Props) => {
 };
 
 export default Grid;
-
-/*
-  - um grid controla as notas que estã ativas
-*/
