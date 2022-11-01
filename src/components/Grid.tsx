@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { uploadActiveTiles, db } from "../firebase";
 import Tile from "./Tile";
 import { doc, onSnapshot } from "firebase/firestore";
+import ReactSlider from "react-slider";
 
 type Props = {};
 const width = 16;
@@ -53,10 +54,10 @@ const Grid = (props: Props) => {
       console.log("👉 fetched data");
       // convert activeTiles from 1D to 16x13 2D array
       const activeTiles: boolean[][] = [];
-      for (let i = 0; i < 16; i++) {
+      for (let i = 0; i < height; i++) {
         activeTiles.push([]);
-        for (let j = 0; j < 13; j++) {
-          activeTiles[i].push(activeTiles1D[i * 13 + j]);
+        for (let j = 0; j < width; j++) {
+          activeTiles[i].push(activeTiles1D[i * width + j]);
         }
       }
       setActiveGrid(activeTiles);
@@ -97,7 +98,7 @@ const Grid = (props: Props) => {
           Array.from({ length: width }, (_, i) => i === playingCol)
         );
         playingCol = (playingCol + 1) % width;
-      }, 500)
+      }, 300)
     );
   }
 
@@ -148,6 +149,13 @@ const Grid = (props: Props) => {
         <button onClick={start}>Start</button>
       )}
       <button onClick={clear}>Clear</button>
+      {/* <ReactSlider
+        className="horizontal-slider"
+        thumbClassName="example-thumb"
+        trackClassName="example-track"
+        style={{ width: "100%" }}
+        renderThumb={(props, state) => <div {...props}>{state.valueNow}</div>}
+      /> */}
     </div>
   );
 };
