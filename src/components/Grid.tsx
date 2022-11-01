@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
+import { uploadActiveTiles, db } from "../firebase";
 import Tile from "./Tile";
+import { doc, onSnapshot } from "firebase/firestore";
 
 type Props = {};
 const width = 16;
@@ -40,6 +42,28 @@ const Grid = (props: Props) => {
     Array.from({ length: width }, (_, i) => false)
   );
 
+  const [playbackInterval, setPlaybackInterval] = useState<NodeJS.Timer>();
+  const [isPlaying, setIsPlaying] = useState<boolean>(false);
+
+  let playingCol = 0;
+
+  useEffect(() => {
+    const unsubscribe = onSnapshot(doc(db, "active", "active"), (doc) => {
+      const activeTiles1D = doc.data()?.active;
+      console.log("👉 fetched data");
+      // convert activeTiles from 1D to 16x13 2D array
+      const activeTiles: boolean[][] = [];
+      for (let i = 0; i < 16; i++) {
+        activeTiles.push([]);
+        for (let j = 0; j < 13; j++) {
+          activeTiles[i].push(activeTiles1D[i * 13 + j]);
+        }
+      }
+      setActiveGrid(activeTiles);
+    });
+    return () => unsubscribe();
+  }, []);
+
   function playTile(i: number, j: number) {
     setPlayNowCounter((playNowCounter) => {
       const _playNowCounter = [...playNowCounter];
@@ -48,11 +72,14 @@ const Grid = (props: Props) => {
     });
   }
 
-  function changeTileActive(i: number, j: number) {
+  async function changeTileActive(i: number, j: number) {
     const _active = [...activeGrid];
     _active[i][j] = !_active[i][j];
     _active[i][j] && playTile(i, j);
     setActiveGrid(_active);
+    console.log("☁️ upload data...");
+    await uploadActiveTiles(_active);
+    console.log("☁️ data uploaded");
   }
 
   function playColumn(j: number) {
@@ -61,10 +88,6 @@ const Grid = (props: Props) => {
     });
   }
 
-  const [playbackInterval, setPlaybackInterval] = useState<number>();
-  const [isPlaying, setIsPlaying] = useState<boolean>(false);
-
-  let playingCol = 0;
   function start() {
     setIsPlaying(true);
     setPlaybackInterval(
